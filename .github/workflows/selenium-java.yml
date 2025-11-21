@@ -19,10 +19,10 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'   # Adjust Java version as needed
+          java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Install dependencies with Maven (if using Maven)
+      # Step 3: Build dependencies (skip tests here)
       - name: Build and install dependencies
         run: mvn clean install -DskipTests
 
@@ -32,12 +32,17 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable
 
-      # Step 5: Install ChromeDriver
+      # Step 5: Detect installed Chrome version
+      - name: Get Chrome version
+        id: chrome
+        run: echo "CHROME_VERSION=$(google-chrome --version | awk '{print $3}')" >> $GITHUB_ENV
+
+      # Step 6: Install matching ChromeDriver
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v1
         with:
-          chrome-version: latest
+          chromedriver-version: ${{ env.CHROME_VERSION }}
 
-      # Step 6: Run Selenium tests
+      # Step 7: Run Selenium tests
       - name: Run Selenium tests
-        run: mvn test  # or your custom command
+        run: mvn test
