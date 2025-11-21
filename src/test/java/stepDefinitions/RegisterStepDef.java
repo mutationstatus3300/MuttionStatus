@@ -47,9 +47,11 @@ public class RegisterStepDef {
 	@Given("User is on the Register page")
 	public void launchRegisterPage() {
 		// entering website
+		
+		System.out.println("Launching web page");
 		driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
 		driver.manage().window().maximize();
-
+		System.out.println("Page Launched successfully");
 		String parentWindow = driver.getWindowHandle();
 		wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)) // total wait time
 				.pollingEvery(Duration.ofSeconds(2)) // check every 2 seconds
