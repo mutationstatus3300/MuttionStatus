@@ -13,14 +13,17 @@ public class DriverFactory {
 	public static WebDriver getDriver() {
 		if (driver == null) {
 
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("--headless=new");         // new headless mode
-			options.addArguments("--no-sandbox");           // required in CI
-			options.addArguments("--disable-dev-shm-usage"); // avoid shared memory issues
-			options.addArguments("--window-size=1920,1080");
-			options.addArguments("--disable-gpu");          // optional
-			// Launch the chrome browser
-			driver = new ChromeDriver(options);
+			WebDriverManager.chromedriver().setup();
+
+	        // Chrome options for headless mode
+	        ChromeOptions options = new ChromeOptions();
+	        options.addArguments("--headless=new"); // headless mode
+	        options.addArguments("--disable-gpu");
+	        options.addArguments("--no-sandbox");
+	        options.addArguments("--disable-dev-shm-usage"); // CI memory issues
+	        options.addArguments("--window-size=1920,1080");
+
+	         driver = new ChromeDriver(options);
 			
 			
 		}
