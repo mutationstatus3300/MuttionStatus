@@ -34,10 +34,8 @@ jobs:
           MAJOR_VERSION=$(echo $FULL_VERSION | cut -d. -f1)
           echo "CHROME_VERSION=$MAJOR_VERSION" >> $GITHUB_ENV
 
-      - name: Install ChromeDriver
-        uses: nanasess/setup-chromedriver@v1
-        with:
-          chromedriver-version: ${{ env.CHROME_VERSION }}
+      - name: Set up ChromeDriver
+        uses: actions/setup-chromedriver@v2
 
       - name: Run Selenium tests
         run: mvn test
