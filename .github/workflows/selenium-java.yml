@@ -24,7 +24,7 @@ jobs:
 
       # Step 3: Install dependencies with Maven (if using Maven)
       - name: Build and install dependencies
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
       # Step 4: Install Google Chrome
       - name: Install Google Chrome
