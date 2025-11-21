@@ -2,39 +2,41 @@ name: Daily Selenium Java Test
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Runs daily at 7:00 AM UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 7 * * *'
+  workflow_dispatch:
 
 jobs:
   selenium-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Build dependencies (skip tests)
-      - name: Build dependencies
+      - name: Build dependencies (skip tests)
         run: mvn clean install -DskipTests
 
-      # Step 4: Install Google Chrome
       - name: Install Google Chrome
         run: |
           sudo apt update
           sudo apt install -y google-chrome-stable
 
-      # Step 5: Install ChromeDriver automatically (matches installed Chrome)
-      - name: Set up ChromeDriver
-        uses: actions/setup-chromedriver@v2
+      # (Optional) If you want to detect version, but not needed with the next action
+      - name: Get Chrome major version
+        id: chrome
+        run: |
+          FULL_VERSION=$(google-chrome --version | awk '{print $3}')
+          MAJOR_VERSION=$(echo $FULL_VERSION | cut -d. -f1)
+          echo "CHROME_VERSION=$MAJOR_VERSION" >> $GITHUB_ENV
 
-      # Step 6: Run Selenium tests
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
       - name: Run Selenium tests
         run: mvn test
