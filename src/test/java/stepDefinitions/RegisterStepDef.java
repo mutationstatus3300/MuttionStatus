@@ -49,8 +49,8 @@ public class RegisterStepDef {
 		// entering website
 		
 		System.out.println("Launching web page");
-		//driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
-		driver.get("https://testautomationpractice.blogspot.com/");
+		driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
+		//driver.get("https://testautomationpractice.blogspot.com/");
 		
 		
 		driver.manage().window().maximize();
