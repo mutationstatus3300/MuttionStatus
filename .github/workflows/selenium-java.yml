@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Reports
-          path: target
+          path: images
           if-no-files-found: error
 
       # UPLOAD CUCUMBER HTML REPORT
