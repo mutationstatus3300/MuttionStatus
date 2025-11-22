@@ -20,50 +20,38 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      # MAVEN ALREADY INSTALLED ON UBUNTU RUNNER ✔
+      # MAVEN ALREADY AVAILABLE ON UBUNTU RUNNER
       - name: Check Maven version
         run: mvn -v
 
       - name: Build dependencies (skip tests)
         run: mvn clean install -DskipTests
 
-      # PUBLIC CHROME INSTALL
+      # PUBLIC GOOGLE CHROME INSTALL
       - name: Install Google Chrome
         run: |
           wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt-get update -y
           sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-      # PUBLIC CHROMEDRIVER INSTALL (Auto-matching version)
-      - name: Install ChromeDriver
-        run: |
-          CHROME_VERSION=$(google-chrome --version | sed 's/Google Chrome //')
-          MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
+      # PUBLIC CHROMEDRIVER INSTALL (Auto-matching Chrome version)
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
 
-          echo "Detected Chrome Version: $CHROME_VERSION"
-          echo "Detected Major Version: $MAJOR_VERSION"
-
-          DRIVER_URL=$(wget -qO- https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json | \
-            jq -r --arg ver "$CHROME_VERSION" '.versions[] | select(.version == $ver) | .downloads.chromedriver[] | select(.platform=="linux64") | .url')
-
-          echo "Downloading ChromeDriver from: $DRIVER_URL"
-          
-          wget -q "$DRIVER_URL" -O chromedriver.zip
-          unzip chromedriver.zip
-          sudo mv ./chromedriver-linux64/chromedriver /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
-
+      # RUN SELENIUM TESTS
       - name: Run Selenium tests
         id: run-tests
         run: mvn test
         continue-on-error: true
 
+      # UPLOAD TEST REPORTS
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Reports
           path: SelePractice/target
 
+      # FAIL THE JOB IF TESTS FAILED
       - name: Check test result
         if: steps.run-tests.outcome != 'success'
         run: exit 1
