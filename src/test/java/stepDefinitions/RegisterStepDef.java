@@ -50,7 +50,7 @@ public class RegisterStepDef {
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(300));
 		System.out.println("Launching web page");
 		//driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
-		driver.get("https://testautomationpractice.blogspot.com/");
+		driver.get("https://landrecords.karnataka.gov.in/Service2/");
 		
 		
 		driver.manage().window().maximize();
