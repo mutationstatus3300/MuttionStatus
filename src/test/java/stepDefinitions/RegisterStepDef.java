@@ -54,6 +54,7 @@ public class RegisterStepDef {
 		
 		
 		driver.manage().window().maximize();
+		captureScreenshot(driver);
 		System.out.println("Page Launched successfully");
 		String parentWindow = driver.getWindowHandle();
 		wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)) // total wait time
