@@ -49,12 +49,17 @@ public class RegisterStepDef {
 		// entering website
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(300));
 		System.out.println("Launching web page");
-		//driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
-		driver.get("https://www.google.com/");
 		
-		
+		try {
+			driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
 		driver.manage().window().maximize();
 		captureScreenshot(driver);
+		}catch(Exception e) {
+			captureScreenshot(driver);
+		}
+		
+		
+		
 		/*
 		 * System.out.println("Page Launched successfully"); String parentWindow =
 		 * driver.getWindowHandle(); wait = new
