@@ -47,7 +47,7 @@ public class RegisterStepDef {
 	@Given("User is on the Register page")
 	public void launchRegisterPage() {
 		// entering website
-		
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(300));
 		System.out.println("Launching web page");
 		driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
 		//driver.get("https://testautomationpractice.blogspot.com/");

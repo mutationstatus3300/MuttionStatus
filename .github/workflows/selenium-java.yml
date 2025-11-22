@@ -38,6 +38,14 @@ jobs:
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
+      # SETUP DYNAMIC SCREENSHOT PATH
+      - name: Set screenshot path
+        id: screenshot-path
+        run: |
+          DATE=$(date '+%Y_%b_%d')
+          SCREENSHOT_PATH="SelePractice/images/Screenshot_${DATE}.png"
+          echo "SCREENSHOT_PATH=${SCREENSHOT_PATH}" >> $GITHUB_ENV
+
       # RUN SELENIUM TESTS
       - name: Run Selenium tests
         id: run-tests
@@ -50,6 +58,15 @@ jobs:
         with:
           name: Selenium-Test-Reports
           path: SelePractice/target
+        if: always()
+
+      # UPLOAD SCREENSHOT (dynamic)
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: Selenium-Screenshot
+          path: ${{ env.SCREENSHOT_PATH }}
+        if: always()
 
       # FAIL THE JOB IF TESTS FAILED
       - name: Check test result
