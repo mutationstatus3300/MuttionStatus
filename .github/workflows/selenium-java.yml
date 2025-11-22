@@ -13,43 +13,59 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      # JAVA SETUP
+      - name: Setup Java SDK
+        uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: 17
+          distribution: temurin
+
+      # MAVEN SETUP (PUBLIC OPEN-SOURCE)
+      - name: Set up Maven
+        uses: s4u/setup-maven@v1
+        with:
+          maven-version: 3.8.2
 
       - name: Build dependencies (skip tests)
         run: mvn clean install -DskipTests
 
+      # PUBLIC CHROME INSTALL
       - name: Install Google Chrome
         run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable
+          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt-get update -y
+          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-      # (Optional) If you want to detect version, but not needed with the next action
-      - name: Get Chrome major version
-        id: chrome
+      # PUBLIC CHROMEDRIVER INSTALL (Auto-matching version)
+      - name: Install ChromeDriver
         run: |
-          FULL_VERSION=$(google-chrome --version | awk '{print $3}')
-          MAJOR_VERSION=$(echo $FULL_VERSION | cut -d. -f1)
-          echo "CHROME_VERSION=$MAJOR_VERSION" >> $GITHUB_ENV
+          CHROME_VERSION=$(google-chrome --version | sed 's/Google Chrome //')
+          MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
 
-      - name: Set up ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
+          echo "Detected Chrome Version: $CHROME_VERSION"
+          echo "Detected Major Version: $MAJOR_VERSION"
+
+          DRIVER_URL=$(wget -qO- https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json | \
+            jq -r --arg ver "$CHROME_VERSION" '.versions[] | select(.version == $ver) | .downloads.chromedriver[] | select(.platform=="linux64") | .url')
+
+          echo "Downloading ChromeDriver from: $DRIVER_URL"
+          
+          wget -q "$DRIVER_URL" -O chromedriver.zip
+          unzip chromedriver.zip
+          sudo mv ./chromedriver-linux64/chromedriver /usr/bin/chromedriver
+          sudo chmod +x /usr/bin/chromedriver
 
       - name: Run Selenium tests
+        id: run-tests
         run: mvn test
         continue-on-error: true
 
-      # Upload target folder as artifact
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Reports
           path: SelePractice/target
 
-      # Fail the job if tests failed
       - name: Check test result
         if: steps.run-tests.outcome != 'success'
         run: exit 1
