@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # JAVA SETUP
       - name: Setup Java SDK
@@ -27,14 +27,14 @@ jobs:
       - name: Build dependencies (skip tests)
         run: mvn clean install -DskipTests
 
-      # PUBLIC GOOGLE CHROME INSTALL
+      # INSTALL GOOGLE CHROME
       - name: Install Google Chrome
         run: |
           wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt-get update -y
           sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-      # PUBLIC CHROMEDRIVER INSTALL (Auto-matching Chrome version)
+      # INSTALL CHROMEDRIVER
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
@@ -52,7 +52,7 @@ jobs:
         run: mvn test
         continue-on-error: true
 
-      # UPLOAD TEST REPORTS
+      # UPLOAD FULL TEST REPORTS DIRECTORY
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         with:
@@ -60,7 +60,15 @@ jobs:
           path: SelePractice/target
         if: always()
 
-      # UPLOAD SCREENSHOT (dynamic)
+      # UPLOAD CUCUMBER HTML REPORT (direct HTML file)
+      - name: Upload Cucumber HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cucumber-HTML-Report
+          path: SelePractice/target/cucumber-report.html
+        if: always()
+
+      # UPLOAD SCREENSHOT
       - name: Upload Screenshot
         uses: actions/upload-artifact@v4
         with:
@@ -68,7 +76,7 @@ jobs:
           path: ${{ env.SCREENSHOT_PATH }}
         if: always()
 
-      # FAIL THE JOB IF TESTS FAILED
+      # FAIL PIPELINE IF TESTS FAILED
       - name: Check test result
         if: steps.run-tests.outcome != 'success'
         run: exit 1

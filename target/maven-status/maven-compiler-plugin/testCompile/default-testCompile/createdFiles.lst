@@ -1,0 +1,6 @@
+Pages\AlertsPage.class
+stepDefinitions\DriverFactory.class
+JavaCodeAnalyzer\SelePractice\AppTest.class
+Runner\RunnerTest.class
+stepDefinitions\RegisterStepDef.class
+Pages\RegisterPage.class
