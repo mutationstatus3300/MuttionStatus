@@ -49,71 +49,69 @@ public class RegisterStepDef {
 		// entering website
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(300));
 		System.out.println("Launching web page");
-		driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
-		//driver.get("https://testautomationpractice.blogspot.com/");
+		//driver.get("https://www.landrecords.karnataka.gov.in/service2/RTC.aspx");
+		driver.get("https://testautomationpractice.blogspot.com/");
 		
 		
 		driver.manage().window().maximize();
 		captureScreenshot(driver);
-		System.out.println("Page Launched successfully");
-		String parentWindow = driver.getWindowHandle();
-		wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)) // total wait time
-				.pollingEvery(Duration.ofSeconds(2)) // check every 2 seconds
-				.ignoring(NoSuchElementException.class);
-		WebElement MutationStatusButton = wait
-				.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='Mutation Status']")));
-		MutationStatusButton.click();
-
-		Set<String> allHandles = driver.getWindowHandles();
-		Iterator<String> iterator = allHandles.iterator();
-		while (iterator.hasNext()) {
-			String win = iterator.next();
-			if (!win.equals(parentWindow)) {
-				driver.switchTo().window(win);
-			}
-		}
-
-		WebElement districtDropDown = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("(//*[contains(text(),'District')])[1]/..//select")));
-		hadleDropDown(districtDropDown, "Ramanagara");
-
-		WebElement talukDropDown = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("(//*[contains(text(),'Taluk')])[1]/..//select")));
-		hadleDropDown(talukDropDown, "Magadi");
-
-		WebElement hobliDropDown = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("(//*[contains(text(),'Hobli')])[1]/..//select")));
-		hadleDropDown(hobliDropDown, "KUDURU");
-
-		WebElement villgeDropDown = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("(//*[contains(text(),'Village')])[1]/..//select")));
-		hadleDropDown(villgeDropDown, "AJJAHALLI");
-
-		WebElement surveynumInput = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'Survey No.')]/..//input")));
-		surveynumInput.sendKeys("113");
-
-		Actions actions = new Actions(driver);
-		actions.sendKeys(Keys.ENTER).perform();
-
-		WebElement Surnoc = wait.until(ExpectedConditions
-				.elementToBeClickable(By.xpath("(//*[contains(text(),'Surnoc No.')])[1]/..//select")));
-
-		hadleDropDown(Surnoc, "*");
-
-		WebElement hissa = wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("(//*[contains(text(),'Hissa No.')])[1]/..//select")));
-		hadleDropDown(hissa, "3");
-
-		WebElement fetchDetails = wait
-				.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='MainContent_btnFetch']")));
-		captureScreenshot(driver);
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		/*
+		 * System.out.println("Page Launched successfully"); String parentWindow =
+		 * driver.getWindowHandle(); wait = new
+		 * FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)) // total wait time
+		 * .pollingEvery(Duration.ofSeconds(2)) // check every 2 seconds
+		 * .ignoring(NoSuchElementException.class); WebElement MutationStatusButton =
+		 * wait .until(ExpectedConditions.elementToBeClickable(By.
+		 * xpath("//*[text()='Mutation Status']"))); MutationStatusButton.click();
+		 * 
+		 * Set<String> allHandles = driver.getWindowHandles(); Iterator<String> iterator
+		 * = allHandles.iterator(); while (iterator.hasNext()) { String win =
+		 * iterator.next(); if (!win.equals(parentWindow)) {
+		 * driver.switchTo().window(win); } }
+		 * 
+		 * WebElement districtDropDown = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.xpath(
+		 * "(//*[contains(text(),'District')])[1]/..//select")));
+		 * hadleDropDown(districtDropDown, "Ramanagara");
+		 * 
+		 * WebElement talukDropDown = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.xpath(
+		 * "(//*[contains(text(),'Taluk')])[1]/..//select")));
+		 * hadleDropDown(talukDropDown, "Magadi");
+		 * 
+		 * WebElement hobliDropDown = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.xpath(
+		 * "(//*[contains(text(),'Hobli')])[1]/..//select")));
+		 * hadleDropDown(hobliDropDown, "KUDURU");
+		 * 
+		 * WebElement villgeDropDown = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.xpath(
+		 * "(//*[contains(text(),'Village')])[1]/..//select")));
+		 * hadleDropDown(villgeDropDown, "AJJAHALLI");
+		 * 
+		 * WebElement surveynumInput = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.
+		 * xpath("//*[contains(text(),'Survey No.')]/..//input")));
+		 * surveynumInput.sendKeys("113");
+		 * 
+		 * Actions actions = new Actions(driver);
+		 * actions.sendKeys(Keys.ENTER).perform();
+		 * 
+		 * WebElement Surnoc = wait.until(ExpectedConditions .elementToBeClickable(By.
+		 * xpath("(//*[contains(text(),'Surnoc No.')])[1]/..//select")));
+		 * 
+		 * hadleDropDown(Surnoc, "*");
+		 * 
+		 * WebElement hissa = wait.until( ExpectedConditions.elementToBeClickable(By.
+		 * xpath("(//*[contains(text(),'Hissa No.')])[1]/..//select")));
+		 * hadleDropDown(hissa, "3");
+		 * 
+		 * WebElement fetchDetails = wait
+		 * .until(ExpectedConditions.elementToBeClickable(By.xpath(
+		 * "//*[@id='MainContent_btnFetch']"))); captureScreenshot(driver); try {
+		 * Thread.sleep(10000); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
 		driver.quit();
 
 	}
